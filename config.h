@@ -12,6 +12,7 @@ static const char normbgcolor[]     = "#222222";
 static const char normfgcolor[]     = "#bbbbbb";
 static const char selbordercolor[]  = "#017098";
 static const char selbgcolor[]      = "#017098";
+static const char serverselbgcolor[]= "#980101";
 static const char selfgcolor[]      = "#eeeeee";
 static const unsigned int borderpx  = 1;        /* border pixel of windows */
 static const unsigned int snap      = 32;       /* snap pixel */
@@ -57,17 +58,29 @@ static const Layout layouts[] = {
 /* commands */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
 static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, /* "-fn", dmenufont, */ "-nb", normbgcolor, "-nf", normfgcolor, "-sb", selbgcolor, "-sf", selfgcolor, NULL };
+static const char *dmenuserver[] = { "gdmenu", NULL };
+static const char *togglekb[] = { "xinput", "disable", "cros-ec-spi" };
 static const char *termcmd[]  = { "st", NULL };
 static const char *lockcmd[]  = { "xscreensaver-command", "-lock", NULL };
-static const char *browser[]  = { "chromium", NULL };
+static const char *browser[]  = { "appium", NULL };
+static const char *shiftbrowser[] = { "chromium", NULL };
 static const char *openserver[]  = { "st", "-e", "/bin/ssh", "grav", NULL };
 static const char *togglemouse[] = { "touchtoggle", NULL };
+static const char *bup[] = { "bright", "up", NULL };
+static const char *bdown[] = { "bright", "down", NULL };
 
 static Key keys[] = {
 	/* modifier                     key        function        argument */
 	{ MODKEY|ShiftMask,             XK_Return, spawn,          {.v = termcmd } },
 	{ MODKEY,                       XK_p,      spawn,          {.v = dmenucmd } },
+	{ MODKEY|ShiftMask,             XK_p,      spawn,          {.v = dmenuserver } },
 	{ MODKEY,                       XK_o,      spawn,          {.v = browser } },
+	{ MODKEY|ShiftMask,             XK_o,      spawn,          {.v = shiftbrowser } },
+	{ MODKEY|ShiftMask,             XK_l,      spawn,          {.v = lockcmd } },
+  { MODKEY|ShiftMask,             XK_m,      spawn,          {.v = togglemouse } },
+  { MODKEY,                       XK_F6,     spawn,          {.v = bdown } },
+  { MODKEY,                       XK_F7,     spawn,          {.v = bup } },
+	{ MODKEY,                       XK_g,      spawn,          {.v = openserver } },
 	{ MODKEY,                       XK_b,      togglebar,      {0} },
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
 	{ MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
@@ -89,8 +102,7 @@ static Key keys[] = {
 	{ MODKEY,                       XK_period, focusmon,       {.i = +1 } },
 	{ MODKEY|ShiftMask,             XK_comma,  tagmon,         {.i = -1 } },
 	{ MODKEY|ShiftMask,             XK_period, tagmon,         {.i = +1 } },
-	{ MODKEY|ShiftMask,             XK_l,      spawn,          {.v = lockcmd } },
-	{ MODKEY,                       XK_g,      spawn,          {.v = openserver } },
+  { MODKEY|ShiftMask,             XK_r,      spawn,          {.v = togglekb } },
 	TAGKEYS(                        XK_1,                      0)
 	TAGKEYS(                        XK_2,                      1)
 	TAGKEYS(                        XK_3,                      2)
@@ -101,7 +113,6 @@ static Key keys[] = {
 	TAGKEYS(                        XK_8,                      7)
 	TAGKEYS(                        XK_9,                      8)
 	{ MODKEY|ShiftMask,             XK_q,      quit,           {0} },
-  { MODKEY,                       0xfe03,    spawn,          {.v = togglemouse }},
 };
 
 /* button definitions */
@@ -114,7 +125,7 @@ static Button buttons[] = {
 	{ ClkStatusText,        0,              Button2,        spawn,          {.v = termcmd } },
 	{ ClkClientWin,         MODKEY,         Button1,        movemouse,      {0} },
 	{ ClkClientWin,         MODKEY,         Button2,        togglefloating, {0} },
-	{ ClkClientWin,         MODKEY,         Button3,        resizemouse,    {0} },
+	{ ClkClientWin,         MODKEY|ShiftMask,Button1,        resizemouse,    {0} },
 	{ ClkTagBar,            0,              Button1,        view,           {0} },
 	{ ClkTagBar,            0,              Button3,        toggleview,     {0} },
 	{ ClkTagBar,            MODKEY,         Button1,        tag,            {0} },
