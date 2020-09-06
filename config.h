@@ -1,24 +1,27 @@
 /* See LICENSE file for copyright and license details. */
 
 /* appearance */
-static const char *fonts[] = {
-	"DroidSansMono:size=16",
-};
-static const char dmenufont[] = "status-18";
-static const char normbordercolor[] = "#444444";
-static const char normbgcolor[]     = "#222222";
-static const char normfgcolor[]     = "#bbbbbb";
-static const char selbordercolor[]  = "#017098";
-static const char selbgcolor[]      = "#017098";
-static const char serverselbgcolor[]= "#980101";
-static const char selfgcolor[]      = "#eeeeee";
 static const unsigned int borderpx  = 1;        /* border pixel of windows */
 static const unsigned int snap      = 32;       /* snap pixel */
-static const Bool showbar           = True;     /* False means no bar */
-static const Bool topbar            = True;     /* False means bottom bar */
+static const int showbar           = 1;     /* 0 means no bar */
+static const int topbar            = 1;     /* 0 means bottom bar */
+static const char *fonts[] = { "DroidSansMono:size=16", };
+static const char dmenufont[] = "status-18";
+
+static const char col_gray1[]       = "#2e3440";
+static const char col_gray2[]       = "#2e3440";
+static const char col_gray3[]       = "#81a1c1";
+static const char col_gray4[]       = "#e5e9f0";
+static const char col_cyan[]        = "#4c566a";
+
+static const char *colors[][3]      = {
+	/*               fg         bg         border   */
+	[SchemeNorm] = { col_gray3, col_gray1, col_gray2 },
+	[SchemeSel]  = { col_gray4, col_cyan,  col_cyan  },
+};
 
 /* tagging */
-static const char *tags[] = { "home", "web", "3", "4", "5", "6", "7", "8", "9" };
+static const char *tags[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
 
 static const Rule rules[] = {
 	/* xprop(1):
@@ -26,14 +29,13 @@ static const Rule rules[] = {
 	 *	WM_NAME(STRING) = title
 	 */
 	/* class      instance    title       tags mask     isfloating   monitor */
-	{ "Gimp",     NULL,       NULL,       0,            True,        -1 },
-	{ "Firefox",  NULL,       NULL,       1 << 8,       False,       -1 },
+	{ "Gimp",     NULL,       NULL,       0,            1,        -1 },
 };
 
 /* layout(s) */
-static const float mfact      = 0.55; /* factor of master area size [0.05..0.95] */
-static const int nmaster      = 1;    /* number of clients in master area */
-static const Bool resizehints = True; /* True means respect size hints in tiled resizals */
+static const float mfact     = 0.55; /* factor of master area size [0.05..0.95] */
+static const int nmaster     = 1;    /* number of clients in master area */
+static const int resizehints = 1; /* 1 means respect size hints in tiled resizals */
 
 static const Layout layouts[] = {
 	/* symbol     arrange function */
@@ -50,6 +52,7 @@ static const Layout layouts[] = {
 	{ MODKEY|ShiftMask,             KEY,      tag,            {.ui = 1 << TAG} }, \
 	{ MODKEY|ControlMask|ShiftMask, KEY,      toggletag,      {.ui = 1 << TAG} },
 
+/* keys for brightness changes */
 #define XF86MonBrightnessDown           0x1008ff03
 #define XF86MonBrightnessUp             0x1008ff02
 
@@ -58,10 +61,10 @@ static const Layout layouts[] = {
 
 /* commands */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
-static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, /* "-fn", dmenufont, */ "-nb", normbgcolor, "-nf", normfgcolor, "-sb", selbgcolor, "-sf", selfgcolor, NULL };
+static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
 static const char *termcmd[]  = { "st", NULL };
 static const char *lockcmd[]  = { "xscreensaver-command", "-lock", NULL };
-static const char *shiftbrowser[] = { "chromium", NULL };
+static const char *browser[] = { "chromium", NULL };
 static const char *bup[] = { "bright", "up", NULL };
 static const char *bdown[] = { "bright", "down", NULL };
 
@@ -69,7 +72,7 @@ static Key keys[] = {
 	/* modifier                     key        function        argument */
 	{ MODKEY|ShiftMask,             XK_Return, spawn,          {.v = termcmd } },
 	{ MODKEY,                       XK_p,      spawn,          {.v = dmenucmd } },
-	{ MODKEY|ShiftMask,             XK_o,      spawn,          {.v = shiftbrowser } },
+	{ MODKEY|ShiftMask,             XK_o,      spawn,          {.v = browser } },
 	{ MODKEY|ShiftMask,             XK_l,      spawn,          {.v = lockcmd } },
 	{ 0,                            XF86MonBrightnessDown,     spawn,          {.v = bdown } },
 	{ 0,                            XF86MonBrightnessUp,     spawn,          {.v = bup } },
@@ -94,7 +97,6 @@ static Key keys[] = {
 	{ MODKEY,                       XK_period, focusmon,       {.i = +1 } },
 	{ MODKEY|ShiftMask,             XK_comma,  tagmon,         {.i = -1 } },
 	{ MODKEY|ShiftMask,             XK_period, tagmon,         {.i = +1 } },
-  { MODKEY|ShiftMask,             XK_r,      spawn,          {.v = togglekb } },
 	TAGKEYS(                        XK_1,                      0)
 	TAGKEYS(                        XK_2,                      1)
 	TAGKEYS(                        XK_3,                      2)
