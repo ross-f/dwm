@@ -2,9 +2,7 @@
 
 /* appearance */
 static const char *fonts[] = {
-    "Sans:size=8.5",
-    "VL Gothic:size=8.5",
-    "WenQuanYi Micro Hei:size=8.5",
+	"DroidSansMono:size=16",
 };
 static const char dmenufont[] = "status-18";
 static const char normbordercolor[] = "#444444";
@@ -45,12 +43,15 @@ static const Layout layouts[] = {
 };
 
 /* key definitions */
-#define MODKEY Mod1Mask
+#define MODKEY Mod4Mask
 #define TAGKEYS(KEY,TAG) \
 	{ MODKEY,                       KEY,      view,           {.ui = 1 << TAG} }, \
 	{ MODKEY|ControlMask,           KEY,      toggleview,     {.ui = 1 << TAG} }, \
 	{ MODKEY|ShiftMask,             KEY,      tag,            {.ui = 1 << TAG} }, \
 	{ MODKEY|ControlMask|ShiftMask, KEY,      toggletag,      {.ui = 1 << TAG} },
+
+#define XF86MonBrightnessDown           0x1008ff03
+#define XF86MonBrightnessUp             0x1008ff02
 
 /* helper for spawning shell commands in the pre dwm-5.0 fashion */
 #define SHCMD(cmd) { .v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } }
@@ -58,14 +59,9 @@ static const Layout layouts[] = {
 /* commands */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
 static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, /* "-fn", dmenufont, */ "-nb", normbgcolor, "-nf", normfgcolor, "-sb", selbgcolor, "-sf", selfgcolor, NULL };
-static const char *dmenuserver[] = { "gdmenu", NULL };
-static const char *togglekb[] = { "xinput", "disable", "cros-ec-spi" };
 static const char *termcmd[]  = { "st", NULL };
 static const char *lockcmd[]  = { "xscreensaver-command", "-lock", NULL };
-static const char *browser[]  = { "appium", NULL };
 static const char *shiftbrowser[] = { "chromium", NULL };
-static const char *openserver[]  = { "st", "-e", "/bin/ssh", "grav", NULL };
-static const char *togglemouse[] = { "touchtoggle", NULL };
 static const char *bup[] = { "bright", "up", NULL };
 static const char *bdown[] = { "bright", "down", NULL };
 
@@ -73,14 +69,10 @@ static Key keys[] = {
 	/* modifier                     key        function        argument */
 	{ MODKEY|ShiftMask,             XK_Return, spawn,          {.v = termcmd } },
 	{ MODKEY,                       XK_p,      spawn,          {.v = dmenucmd } },
-	{ MODKEY|ShiftMask,             XK_p,      spawn,          {.v = dmenuserver } },
-	{ MODKEY,                       XK_o,      spawn,          {.v = browser } },
 	{ MODKEY|ShiftMask,             XK_o,      spawn,          {.v = shiftbrowser } },
 	{ MODKEY|ShiftMask,             XK_l,      spawn,          {.v = lockcmd } },
-  { MODKEY|ShiftMask,             XK_m,      spawn,          {.v = togglemouse } },
-  { MODKEY,                       XK_F6,     spawn,          {.v = bdown } },
-  { MODKEY,                       XK_F7,     spawn,          {.v = bup } },
-	{ MODKEY,                       XK_g,      spawn,          {.v = openserver } },
+	{ 0,                            XF86MonBrightnessDown,     spawn,          {.v = bdown } },
+	{ 0,                            XF86MonBrightnessUp,     spawn,          {.v = bup } },
 	{ MODKEY,                       XK_b,      togglebar,      {0} },
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
 	{ MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
