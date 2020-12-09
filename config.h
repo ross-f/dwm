@@ -10,9 +10,9 @@ static const char dmenufont[] = "status-18";
 
 static const char col_gray1[]       = "#2e3440";
 static const char col_gray2[]       = "#2e3440";
-static const char col_gray3[]       = "#81a1c1";
+static const char col_gray3[]        = "#81A1C1";
 static const char col_gray4[]       = "#e5e9f0";
-static const char col_cyan[]        = "#4c566a";
+static const char col_cyan[]       = "#4C566A";
 
 static const char *colors[][3]      = {
 	/*               fg         bg         border   */
@@ -29,7 +29,11 @@ static const Rule rules[] = {
 	 *	WM_NAME(STRING) = title
 	 */
 	/* class      instance    title       tags mask     isfloating   monitor */
-	{ "Gimp",     NULL,       NULL,       0,            1,        -1 },
+	{ "Gimp",     NULL,       NULL,       0,            0,        -1 },
+	{ "Slack",     NULL,       NULL,       1 << 0,            0,        -1 },
+	{ "Chromium",     NULL,       NULL,    1 << 1,            0,        -1 },
+	{  NULL,     "music.youtube.com",     NULL,       1 << 7,            0,        -1 },
+	{ "code-oss",     NULL,       NULL,       1 << 2,            0,        -1 },
 };
 
 /* layout(s) */
@@ -43,6 +47,7 @@ static const Layout layouts[] = {
 	{ "><>",      NULL },    /* no layout function means floating behavior */
 	{ "[M]",      monocle },
 	{ "[D]",      deck },
+	{ "|||",      col },
 };
 
 /* key definitions */
@@ -66,6 +71,9 @@ static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont,
 static const char *termcmd[]  = { "st", NULL };
 static const char *lockcmd[]  = { "slock", NULL };
 static const char *browser[] = { "chromium", NULL };
+static const char *code[] = { "code", NULL };
+static const char *music[] = { "music", NULL };
+static const char *slack[] = { "slack", NULL };
 static const char *bup[] = { "bright", "up", NULL };
 static const char *bdown[] = { "bright", "down", NULL };
 static const char *screenie[] = { "screenie", NULL };
@@ -76,6 +84,9 @@ static Key keys[] = {
 	{ MODKEY|ShiftMask,             XK_Return, spawn,          {.v = termcmd } },
 	{ MODKEY,                       XK_p,      spawn,          {.v = dmenucmd } },
 	{ MODKEY|ShiftMask,             XK_o,      spawn,          {.v = browser } },
+	{ MODKEY|ShiftMask,             XK_k,      spawn,          {.v = code } },
+	{ MODKEY|ShiftMask,             XK_p,      spawn,          {.v = music } },
+	{ MODKEY|ShiftMask,             XK_i,      spawn,          {.v = slack } },
 	{ MODKEY|ShiftMask,             XK_l,      spawn,          {.v = lockcmd } },
 	{ 0,                            XF86MonBrightnessDown,     spawn,          {.v = bdown } },
 	{ 0,                            XF86MonBrightnessUp,     spawn,          {.v = bup } },
@@ -96,6 +107,7 @@ static Key keys[] = {
 	{ MODKEY,                       XK_f,      setlayout,      {.v = &layouts[1]} },
 	{ MODKEY,                       XK_m,      setlayout,      {.v = &layouts[2]} },
 	{ MODKEY,                       XK_c,      setlayout,      {.v = &layouts[3]} },
+	{ MODKEY|ShiftMask,             XK_backslash,	   setlayout,      {.v = &layouts[4]} },
 	{ MODKEY,                       XK_space,  togglefloating, {0} },
 	{ MODKEY|ShiftMask,             XK_space,  togglealwaysontop, {0} },
 	{ MODKEY,						XK_s,	   togglesticky,   {0} },
